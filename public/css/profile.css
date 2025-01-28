@@ -1,0 +1,267 @@
+:root {
+    --spotify-green: #1DB954;
+    --spotify-black: #191414;
+    --spotify-white: #FFFFFF;
+    --spotify-gray: #919496;
+    --spotify-light-gray: #D9DADC;
+    --spotify-dark-gray: #282828;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    background: var(--spotify-black);
+    color: var(--spotify-white);
+    line-height: 1.5;
+}
+
+/* Existing styles remain unchanged */
+
+/* New Profile Styles */
+.profile-container {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #404040 0%, var(--spotify-black) 100%);
+}
+
+.top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
+    background: rgba(0, 0, 0, 0.6);
+}
+.settings-icon a {
+    text-decoration: none;
+    position: absolute;
+    top: 25px; /* Adjust based on placement */
+    right: 10px; /* Adjust based on placement */
+    background-color: white; /* Background for better visibility */
+    border-radius: 50%; /* Makes the icon circular */
+    padding: 5px; /* Space around the icon */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Optional: Adds a subtle shadow */
+    cursor: pointer;
+    font-size: 18px; /* Adjust icon size */
+    color: #666; /* Icon color */
+}
+
+
+.settings-icon a:hover {
+    background-color: #f1f1f1; /* Highlight effect on hover */
+    color: #333; /* Darker color on hover */
+}
+.nav-logo .spotify-logo {
+    width: 130px;
+    color: var(--spotify-white);
+}
+
+.nav-link {
+    color: var(--spotify-white);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 8px 16px;
+    border-radius: 500px;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+.nav-link:hover {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+.profile-main {
+    padding: 24px 32px;
+}
+
+.profile-header {
+    margin-bottom: 40px;
+}
+
+.profile-info {
+    display: flex;
+    align-items: flex-end;
+    gap: 24px;
+}
+
+.profile-avatar {
+    width: 232px;
+    height: 232px;
+    border-radius: 50%;
+    position: relative;
+    box-shadow: 0 4px 60px rgba(0, 0, 0, .5);
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-details {
+    flex: 1;
+}
+
+.profile-label {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.profile-name {
+    font-size: 96px;
+    font-weight: 900;
+    margin: 8px 0 24px;
+    line-height: 1;
+}
+
+.profile-stats {
+    display: flex;
+    gap: 24px;
+}
+
+.stat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.stat-value {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: var(--spotify-gray);
+}
+
+.section-header {
+    margin-bottom: 16px;
+}
+
+.section-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.playlist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 24px;
+}
+
+.playlist-card {
+    background: var(--spotify-dark-gray);
+    padding: 16px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+}
+
+.playlist-card:hover {
+    background: #333333;
+}
+
+.playlist-image {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.playlist-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.play-button {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--spotify-green);
+    border: none;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.playlist-card:hover .play-button {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.play-button svg {
+    width: 24px;
+    height: 24px;
+    fill: var(--spotify-white);
+}
+
+.play-button:hover {
+    transform: scale(1.04);
+    background: #1ed760;
+}
+
+.playlist-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.playlist-card p {
+    font-size: 14px;
+    color: var(--spotify-gray);
+}
+
+@media (max-width: 768px) {
+    .profile-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-avatar {
+        width: 160px;
+        height: 160px;
+    }
+
+    .profile-name {
+        font-size: 48px;
+    }
+
+    .profile-stats {
+        justify-content: center;
+    }
+
+    .playlist-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+}
+
+/* Keep existing styles for login and signup pages */
+.container {
+    max-width: 450px;
+    margin: 0 auto;
+    padding: 20px;
+}
+

@@ -1,0 +1,13 @@
+# Backend
+/backend/node_modules/
+/backend/dist/
+/backend/.env
+/backend/*.log
+/backend/src/controllers/downloads
+/backend/src/controllers/downloadsForSpotify
+
+# Frontend
+/node_modules/
+
+/.env
+/dist

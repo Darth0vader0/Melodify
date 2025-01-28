@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Search</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            margin-top: 50px;
+        }
+
+        .result-card {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-card img {
+            width: 120px;
+            border-radius: 8px;
+        }
+
+        .result-details {
+            margin-left: 15px;
+            flex-grow: 1;
+        }
+
+        .result-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .result-title:hover {
+            text-decoration: underline;
+        }
+
+        .download-btn {
+            margin-left: auto;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+        }
+
+        .download-btn:hover {
+            background-color: #0056b3;
+        }
+
+        #loadingEffect {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #loadingContainer{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <h1 class="text-center mb-4">YouTube to MP3 Converter</h1>
+        <p class="text-center mb-4">Search for YouTube videos and download them as MP3 files easily.</p>
+
+        <!-- Search Input -->
+        <div class="input-group mb-4">
+            <input type="text" id="query" class="form-control" placeholder="Enter a YouTube search query">
+            <button id="searchBtn" class="btn btn-primary">Search</button>
+        </div>
+        <div id="loadingContainer">
+             <div id="loadingEffect" style="display: none;">
+                <p>Downloading...</p>
+                <div class="spinner"></div>
+            </div>
+        </div>
+           
+
+
+        <!-- Results Section -->
+        <div id="results" class="mt-4">
+            <!-- Cards will be dynamically injected here -->
+        </div>
+    </div>
+
+    <script>
+        $('#searchBtn').click(function () {
+            const query = $('#query').val(); // Get the query from the input field
+
+            // Make an AJAX GET request to fetch data
+            $.ajax({
+                url: '/fetch-data', // Backend endpoint
+                method: 'GET',
+                data: { q: query }, 
+                success: function (response) {
+                    let results = '';
+                    let counter = 0;
+
+                    // Loop through the response to generate results
+                    for (const title in response) {
+                        const videoUrl = response[title];
+
+                        results += `
+                    <div class="result-card">
+                        <img src="https://img.youtube.com/vi/${extractVideoId(videoUrl)}/hqdefault.jpg" alt="Thumbnail">
+                        <a href="${videoUrl}" target="_blank" class="result-title">${title}</a>
+                        <button id="${counter}" class="download-btn" onclick="downloadVideo(this)">Download MP3</button>
+                    </div>
+                `;
+                        counter++;
+                    }
+
+                    $('#results').html(results);
+                },
+                error: function (err) {
+                    console.error('Error fetching data:', err);
+                },
+            });
+        });
+
+        // Extract video ID from the URL
+        function extractVideoId(url) {
+            const regex = /v=([a-zA-Z0-9_-]+)/;
+            const match = url.match(regex);
+            return match ? match[1] : '';
+        }
+
+        // Handle download button click
+        async function downloadVideo(buttonElement) {
+            const loadingEffect = document.getElementById('loadingEffect');
+            loadingEffect.style.display = 'block'; // Show the spinner/text
+
+            const result = document.getElementById('results');
+            const childIndex = buttonElement.id; // Get the ID of the button
+
+            const cardElement = result.children[childIndex]; // Get the correct card element
+            const videoUrl = cardElement.querySelector('.result-title').href; // Get the URL from the <a> tag
+            const vidTitle = cardElement.querySelector('.result-title').textContent;
+            console.log(vidTitle);
+
+            // Send POST request to download
+            const response = await fetch('/download', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: videoUrl, title: vidTitle }),
+            });
+
+            // Handle server response
+            const data = await response.json();
+            setTimeout(() => {
+                loadingEffect.style.display = 'none'; // Hide the spinner
+            }, 2000);
+        }
+
+
+    </script>
+</body>
+
+</html>

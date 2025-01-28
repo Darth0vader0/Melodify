@@ -1,0 +1,261 @@
+
+/* Optional: Add custom styles here */
+
+/* Variables */
+:root {
+    --spotify-green: #1DB954;
+    --spotify-black: #191414;
+    --spotify-white: #FFFFFF;
+    --spotify-gray: #B3B3B3;
+    --spotify-light-gray: #282828;
+    --spotify-dark-gray: #121212;
+    --spotify-error: #E91429;
+    --font-primary: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+/* Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--spotify-black);
+    color: var(--spotify-white);
+    line-height: 1.5;
+}
+
+/* Container */
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navigation */
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: var(--spotify-dark-gray);
+}
+
+.nav-logo {
+    display: inline-block;
+}
+
+.spotify-logo {
+    width: 132px;
+    height: 40px;
+    color: var(--spotify-white);
+}
+
+.nav-link {
+    color: var(--spotify-white);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    border-radius: 500px;
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    color: var(--spotify-green);
+}
+
+/* Main Content */
+.edit-profile-main {
+    flex: 1;
+    padding: 2rem;
+}
+
+.edit-profile-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: var(--spotify-light-gray);
+    border-radius: 8px;
+    padding: 2rem;
+}
+
+/* Headings */
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+/* Form Sections */
+.form-section {
+    margin-bottom: 2.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.form-section:last-of-type {
+    border-bottom: none;
+}
+
+/* Profile Photo Section */
+.profile-photo-section {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.profile-photo {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profile-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.photo-upload {
+    flex: 1;
+}
+
+.upload-btn {
+    background: transparent;
+    color: var(--spotify-white);
+    border: 1px solid var(--spotify-white);
+    padding: 0.75rem 2rem;
+    border-radius: 500px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.upload-btn:hover {
+    border-color: var(--spotify-green);
+    color: var(--spotify-green);
+    transform: scale(1.02);
+}
+
+.upload-hint {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--spotify-gray);
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: var(--spotify-dark-gray);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: var(--spotify-white);
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--spotify-green);
+}
+
+.form-group input[readonly] {
+    background-color: rgba(255, 255, 255, 0.1);
+    cursor: not-allowed;
+}
+
+.helper-text {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--spotify-gray);
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.cancel-btn {
+    background: transparent;
+    color: var(--spotify-white);
+    border: 1px solid var(--spotify-white);
+    padding: 0.75rem 2rem;
+    border-radius: 500px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.cancel-btn:hover {
+    border-color: var(--spotify-green);
+    color: var(--spotify-green);
+}
+
+.save-btn {
+    background-color: var(--spotify-green);
+    color: var(--spotify-white);
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 500px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.save-btn:hover {
+    background-color: #1ed760;
+    transform: scale(1.02);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .edit-profile-container {
+        padding: 1.5rem;
+    }
+
+    .profile-photo-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-photo {
+        width: 150px;
+        height: 150px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .cancel-btn,
+    .save-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
