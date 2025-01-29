@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>Melodify-library</title>
+    <title>Melodify-library</title>
     <link rel="icon" type="image/png" href="photos/spotify png.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
@@ -165,80 +165,86 @@
             <!-- Main Content -->
             <div class="col-md-9 col-lg-10 main-content">
 
-
-                <!-- Playlists -->
-                <div class="filters">
-                    <button class="filter-btn active">Playlists</button>
-                    <button class="filter-btn" id="createPlaylistBtn">Create</button>
-
-                </div>
-
-                <div class="library-grid" id="library-item-result">
-                    <div id="playlist-open" style="display: none;">
-                        <p>hello </p>
+                <!-- 🎵 Existing Playlist Section -->
+                <div id="playlistSection">
+                    <div class="filters">
+                        <button class="filter-btn active">Playlists</button>
+                        <button class="filter-btn" id="createPlaylistBtn">Create</button>
                     </div>
-                    <div class="library-item liked-songs">
-                        <div class="item-artwork">
-                            <svg role="img" viewBox="0 0 24 24">
-                                <path
-                                    d="M15.724 4.22A4.313 4.313 0 0012.192.814a4.269 4.269 0 00-3.622 1.13.837.837 0 01-1.14 0 4.272 4.272 0 00-6.21 5.855l5.916 7.05a1.128 1.128 0 001.727 0l5.916-7.05a4.228 4.228 0 00.945-3.577z">
-                                </path>
-                            </svg>
-                            <button class="play-button">
-                                <svg role="img" height="24" width="24" viewBox="0 0 24 24">
-                                    <path fill="black"
-                                        d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z">
+                    <div class="library-grid" id="library-item-result">
+                        <div class="library-item liked-songs" id="likedSongsBtn" onclick="loadSongs()">
+                            <div class="item-artwork">
+                                <svg role="img" viewBox="0 0 24 24">
+                                    <path
+                                        d="M15.724 4.22A4.313 4.313 0 0012.192.814a4.269 4.269 0 00-3.622 1.13.837.837 0 01-1.14 0 4.272 4.272 0 00-6.21 5.855l5.916 7.05a1.128 1.128 0 001.727 0l5.916-7.05a4.228 4.228 0 00.945-3.577z">
                                     </path>
                                 </svg>
-                            </button>
-                        </div>
-                        <h3>Liked Songs</h3>
-                        <p>Playlist • 123 songs</p>
-                    </div>
-
-                    <!-- dynamicaly generated playlist items... -->
-
-                </div>
-
-            </div>
-        </div>
-
-        <!-- Player -->
-        <div class="player fixed-bottom">
-            <div class="container-fluid">
-                <div class="row align-items-center">
-                    <div class="col-md-3" style="cursor: pointer;" id="playlistToggle">
-                        <div class="d-flex align-items-center">
-                            <img src="https://via.placeholder.com/300x400" alt="Now Playing"
-                                class="me-3 w-25 rounded-1">
-                            <div>
-                                <h6 class="text-white mb-0">Song Title</h6>
-                                <small class="">Artist</small>
+                                <button class="play-button">
+                                    <svg role="img" height="24" width="24" viewBox="0 0 24 24">
+                                        <path fill="black"
+                                            d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z">
+                                        </path>
+                                    </svg>
+                                </button>
                             </div>
+                            <h3>Liked Songs</h3>
+                            <p>Playlist • 123 songs</p>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="player-controls text-center">
-                            <button class="btn btn-link text-white mx-2"><i class="bi bi-shuffle"></i></button>
-                            <button class="btn btn-link text-white mx-2"><i class="bi bi-skip-start-fill"></i></button>
-                            <button class="btn btn-link text-white mx-2"><i
-                                    class="bi bi-play-circle-fill fs-2"></i></button>
-                            <button class="btn btn-link text-white mx-2"><i class="bi bi-skip-end-fill"></i></button>
-                            <button class="btn btn-link text-white mx-2"><i class="bi bi-repeat"></i></button>
-                        </div>
-                        <div class="progress mt-2">
-                            <div class="progress-bar" role="progressbar" style="width: 45%"></div>
+                </div>
+
+                <!-- ❤️ New Liked Songs Section (Initially Hidden) -->
+                <div id="likedSongsSection" style="display: none;" onclick="loadOut()">
+                    <button id="backToPlaylists">← Back</button>
+                    <h2>Liked Songs</h2>
+                    <div id="likedSongsContainer">
+                        <!-- Songs will be inserted here dynamically -->
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+    <!-- Player -->
+    <div class="player fixed-bottom">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-3" style="cursor: pointer;" id="playlistToggle">
+                    <div class="d-flex align-items-center">
+                        <img src="https://via.placeholder.com/300x400" alt="Now Playing" class="me-3 w-25 rounded-1">
+                        <div>
+                            <h6 class="text-white mb-0">Song Title</h6>
+                            <small class="">Artist</small>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="volume-controls text-end">
-                            <button class="btn btn-link text-white"><i class="bi bi-volume-up"></i></button>
-                            <input type="range" class="form-range d-inline-block w-50">
-                        </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="player-controls text-center">
+                        <button class="btn btn-link text-white mx-2"><i class="bi bi-shuffle"></i></button>
+                        <button class="btn btn-link text-white mx-2"><i class="bi bi-skip-start-fill"></i></button>
+                        <button class="btn btn-link text-white mx-2"><i
+                                class="bi bi-play-circle-fill fs-2"></i></button>
+                        <button class="btn btn-link text-white mx-2"><i class="bi bi-skip-end-fill"></i></button>
+                        <button class="btn btn-link text-white mx-2"><i class="bi bi-repeat"></i></button>
+                    </div>
+                    <div class="progress mt-2">
+                        <div class="progress-bar" role="progressbar" style="width: 45%"></div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="volume-controls text-end">
+                        <button class="btn btn-link text-white"><i class="bi bi-volume-up"></i></button>
+                        <input type="range" class="form-range d-inline-block w-50">
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <div class="sliding-div" id="failed-create">Failed to create Playlist </div>
     <div class="sliding-div" id="success-create">successfully created the playlist </div>
@@ -256,7 +262,7 @@
         const input = document.getElementById('playlist-name');
         const errorMessage = document.getElementById('error-message');
         const slidingDiv = document.getElementById('sliding-div');
-        const playlistItems = document.getElementById('library-item-result');
+  
         document.addEventListener('DOMContentLoaded', async () => {
             try {
                 const response = await fetch('/getSpotifyPlaylists');
@@ -342,45 +348,31 @@
                 } else {
                     modal.classList.remove('active');
 
-                    
+
                     alert('failed to create playlist');
                 }
             }
         });
-        
-
-        // Add event listener to playlist items
-        async function loadPlaylistSongs (div){
-            playlistItems.style.display = 'none';
-            playlistItems.style.zIndex ='5'
-            const playlistOpenDiv = document.getElementById('playlist-open');
-            playlistOpenDiv.style.display = 'block';
-
-            const playlistId = div.dataset.playlistid;
-            const response = await fetch(`/getPlaylistSongs?playlist_id=${playlistId}`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+        function fetchLikedSongs() {
+                // Replace this with your API fetch logic
+                document.getElementById("likedSongsContainer").innerHTML = `
+        <div class="song-card">
+            <img src="song-thumbnail.jpg" alt="Song">
+            <h3>Song Title</h3>
+            <p>Artist Name</p>
+        </div>
+    `;
             }
-            const playlistSongs = await response.json(); // Parse JSON
-           console.log('Playlist Songs:', playlistSongs); // Log to debug
-            playlistOpenDiv.innerHTML = `<div class="library-item" data-playlistId="vxjajk" onclick="loadPlaylistSongs(this)">
-                    <div class="item-artwork">
-                        <img src="https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228" alt="Playlist">
-                        <button class="play-button">
-                            <svg role="img" height="24" width="24" viewBox="0 0 24 24">
-                                <path fill="black"
-                                    d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z">
-                                </path>
-                            </svg>
-                        </button>
-                    </div>
-                    <h3>my playlist</h3>
-                    <p>Playlist • By You</p>
-                </div>
-            `;
-
+        function loadOut(){
+            document.getElementById('likedSongsSection').style.display = 'none';
+             document.getElementById('likedSongsBtn').style.display = 'block';
         }
-
+        // Add event listener to playlist items
+       function loadSongs(){
+        document.getElementById('likedSongsBtn').style.display = 'none';
+        document.getElementById('likedSongsSection').style.display = 'block';
+        fetchLikedSongs();
+       }
         // Clear error message on input
         input.addEventListener('input', function () {
             if (input.value.trim() !== '') {
@@ -424,6 +416,14 @@
                 }
                 isPlaying = !isPlaying;
             });
+
+
+            
+            
+
+            
+
+            
 
             // Volume control functionality
             const volumeRange = document.querySelector('.form-range');

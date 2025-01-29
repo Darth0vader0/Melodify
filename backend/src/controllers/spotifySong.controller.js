@@ -37,7 +37,7 @@ const createSpotifyPlaylist = async (req, res) => {
     const data = jwt.decode(token, process.env.JWT_SECRET);
     const email = data.userName;
     const query = `SELECT * FROM users WHERE email = ?`;
-    db.query(query,[email], async (err, result) => {
+    db.query(query, [email], async (err, result) => {
       const user = result[0];
       const user_id = user.user_id;
       // Create a new Spotify playlist
@@ -55,6 +55,67 @@ const createSpotifyPlaylist = async (req, res) => {
 
 }
 
+
+const addLikeToSong = async (req, res) => {
+  try {
+    const token = req.cookies.jwt;
+    const email = jwt.decode(token, process.env.JWT_SECRET).userName;
+    // Get user_id from email
+    const q = "SELECT user_id FROM users WHERE email = ?";
+    db.query(q, [email], async (err, result) => {
+      if (err) return res.status(500).json({ error: "Database error" });
+
+      if (result.length === 0) return res.status(404).json({ error: "User not found" });
+
+      const user_id = result[0].user_id;
+      const song_id = req.body.trackId;
+
+      // Check if the song is already liked
+      const query = "SELECT * FROM likes WHERE user_id = ? AND song_id = ?";
+      db.query(query, [user_id, song_id], (err, results) => {
+        if (err) return res.status(500).json({ error: "Database error" });
+        if (results.length > 0) {
+          // Unlike the song
+          db.query("DELETE FROM likes WHERE user_id = ? AND song_id = ?", [user_id, song_id], (err, result) => {
+            if (err) return res.status(500).json({ error: "Database error" });
+            return res.json({ message: "Song unliked successfully" }); // 🔹 RETURN to prevent further execution
+          });
+        } else {
+          // Like the song
+          const like_id = uuidv4();
+          db.query("INSERT INTO likes (user_id, song_id, like_id) VALUES (?, ?, ?)", [user_id, song_id, like_id], (err, result) => {
+            if (err) return res.status(500).json({ error: "Database error" });
+            return res.json({ message: "Song liked successfully" }); // 🔹 RETURN to prevent further execution
+          });
+        }
+      });
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const getLikedSongs = async (req, res) => {
+  const token = req.cookies.jwt;
+  const data = jwt.decode(token, process.env.JWT_SECRET);
+  const email = data.userName;
+  const query = `SELECT user_id FROM users WHERE email = '${email}'`;
+  db.query(query, async (err, result) => {
+    if (err) {
+      console.error('Error fetching user data:', err.message);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+    const user_id = result[0].user_id;
+    const query = `SELECT song_id FROM likes WHERE user_id =?`;
+    db.query(query, [user_id], async (err, likedSongs) => {
+      if (err) {
+        console.error('Error fetching liked songs:', err.message);
+        return res.status(500).json({ error: 'Internal server error' });
+      }
+      res.status(200).json(likedSongs);
+    });
+  });
+}
 
 
 const getSpotifyPlaylists = async (req, res) => {
@@ -88,8 +149,8 @@ const getPlaylistSongs = async (req, res) => {
   const playlist_id = req.query.playlist_id;
   console.log('Playlist ID:', playlist_id);
   // Fetch songs from playlist_songs table with playlist_id
-  const query = `SELECT song_id,id FROM playlist_songs WHERE playlist_id = ?` ;
-  db.query(query,[playlist_id], async (err, songs) => {
+  const query = `SELECT song_id,id FROM playlist_songs WHERE playlist_id = ?`;
+  db.query(query, [playlist_id], async (err, songs) => {
     if (err) {
       console.error('Error fetching songs:', err.message);
       return res.status(500).json({ error: 'Internal server error' });
@@ -100,4 +161,4 @@ const getPlaylistSongs = async (req, res) => {
 
 }
 
-module.exports = { downloadSpotifyTrack, createSpotifyPlaylist,getSpotifyPlaylists ,getPlaylistSongs };
+module.exports = { downloadSpotifyTrack, createSpotifyPlaylist, getSpotifyPlaylists, getPlaylistSongs,addLikeToSong,getLikedSongs };

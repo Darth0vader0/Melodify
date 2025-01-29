@@ -311,7 +311,6 @@
                 const data = await response.json();
 
                 // Handle the fetched song data
-                console.log(data);
                 searchResults.classList.remove('d-none');
                 browseAll.classList.add('d-none');
                 displaySongs(data.results); // Adjust to match your API's response structure
@@ -338,41 +337,49 @@
     
     }
 
-        function displaySongs(songs) {
-            const songContainer = document.querySelector('#resultsContainer');
-            songContainer.innerHTML = ''; // Clear previous results
+        async function displaySongs(songs) {
+    const songContainer = document.querySelector('#resultsContainer');
+    songContainer.innerHTML = ''; // Clear previous results
 
-            songs.forEach((song) => {
-                const songCard =  `
-         <div class="song-card">
-            <div class="artwork-container">
-                <img class="artwork" src="${song.thumbnail}" alt="${song.name}">
-                <div class="button-container">
-                    <button class="play-button">
-                        <svg role="img" height="20" width="20" viewBox="0 0 24 24">
-                            <path fill="currentColor" d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z"></path>
-                        </svg>
-                    </button>
-                    <button class="download-button"  data-trackId="${song.id}" data-trackArtist="${song.artist}" data-trackName="${song.name}" onclick="downloadSpotifySong(this)">
-                    <i class="fa-solid fa-download"></i>
-                       
-                    </button>
+    // Fetch liked songs
+    const likedSongsResponse = await fetch('/getLikedSongs');
+    const likedSongs = await likedSongsResponse.json();
+    const likedSongIds = new Set(likedSongs.map(song => song.song_id)); // Convert to Set for quick lookup
+
+    songs.forEach((song) => {
+        // Check if song is already liked
+        const isLiked = likedSongIds.has(song.id);
+
+        const songCard = `
+            <div class="song-card">
+                <div class="artwork-container">
+                    <img class="artwork" src="${song.thumbnail}" alt="${song.name}">
+                    <div class="button-container">
+                        <button class="play-button">
+                            <svg role="img" height="20" width="20" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z"></path>
+                            </svg>
+                        </button>
+                        <button class="download-button" data-trackId="${song.id}" data-trackArtist="${song.artist}" data-trackName="${song.name}" onclick="downloadSpotifySong(this)">
+                            <i class="fa-solid fa-download"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="song-info">
+                    <h3 class="song-title">${song.name}</h3>
+                    <p class="song-artist">${song.artist}</p>
+                    <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart"  
+                       data-trackId="${song.id}" 
+                       onclick="addLikeToThisSong(this)" 
+                       style="cursor: pointer; z-index:6;">
+                    </i>
                 </div>
             </div>
-            <div class="song-info">
-                <h3 class="song-title">${song.name}</h3>
-                <p class="song-artist">${song.artist}</p>
-                <i class="fa-regular fa-heart"   data-trackId="${song.id}" onclick="addLikeToThisSong(this)" style="cursor: pointer; z-index:6;"></i>
-
-            </div>
-        </div>
         `;
-       
-        
-       
-                songContainer.innerHTML += songCard;
-            });
-        }
+
+        songContainer.innerHTML += songCard;
+    });
+}
 
         let footer = document.getElementById('footer');
         let timeout;
@@ -391,13 +398,42 @@
             clearTimeout(timeout);
             timeout = setTimeout(hideFooter, 3000); // Hide after 3 seconds of inactivity
         }
-        function addLikeToThisSong(button) {
+       async function addLikeToThisSong(button) {
+
             if (button.classList.contains('fa-solid')) {
+                // Remove like
                 button.classList.remove('fa-solid');
                 button.classList.add('fa-regular');
+                const removeLike = await fetch('/addLikeToSong',{
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ trackId: button.dataset.trackid }),
+                        
+                    })
+                    if(removeLike.ok){
+                    console.log('Like removed successfully');
+                } else{
+                    console.error('Error removing like');
+                }
             }else{
+                // Add like
                 button.classList.remove('fa-regular');
                 button.classList.add('fa-solid');
+                    const likeAdded = await fetch('/addLikeToSong',{
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ trackId: button.dataset.trackid }),
+                        
+                    })
+                       if(likeAdded.ok){
+                    console.log('Like added successfully');
+                }else{
+                    console.error('Error adding like');
+                }
+
+           
+
+             
             }
           
         }
