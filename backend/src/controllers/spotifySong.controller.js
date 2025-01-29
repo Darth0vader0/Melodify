@@ -36,8 +36,8 @@ const createSpotifyPlaylist = async (req, res) => {
   try {
     const data = jwt.decode(token, process.env.JWT_SECRET);
     const email = data.userName;
-    const query = `SELECT * FROM users WHERE email = '${email}'`;
-    db.query(query, async (err, result) => {
+    const query = `SELECT * FROM users WHERE email = ?`;
+    db.query(query,[email], async (err, result) => {
       const user = result[0];
       const user_id = user.user_id;
       // Create a new Spotify playlist
@@ -88,8 +88,8 @@ const getPlaylistSongs = async (req, res) => {
   const playlist_id = req.query.playlist_id;
   console.log('Playlist ID:', playlist_id);
   // Fetch songs from playlist_songs table with playlist_id
-  const query = `SELECT song_id,id FROM playlist_songs WHERE playlist_id = '${playlist_id}' `;
-  db.query(query, async (err, songs) => {
+  const query = `SELECT song_id,id FROM playlist_songs WHERE playlist_id = ?` ;
+  db.query(query,[playlist_id], async (err, songs) => {
     if (err) {
       console.error('Error fetching songs:', err.message);
       return res.status(500).json({ error: 'Internal server error' });

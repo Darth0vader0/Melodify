@@ -6,6 +6,7 @@
 /backend/src/controllers/downloads
 /backend/src/controllers/downloadsForSpotify
 
+
 # Frontend
 /node_modules/
 

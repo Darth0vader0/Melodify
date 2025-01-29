@@ -19,5 +19,8 @@ const searchSpotifySongs =(req,res)=>{
 const updateProfile = (req,res)=>{
     res.sendFile("C:/Users/kamal/Desktop/Melodify/public/updateProfile.html")
 }
-module.exports = {signup,login,home,profile,searchOnYoutube,updateProfile,searchSpotifySongs};
+const library = (req,res)=>{
+    res.sendFile("C:/Users/kamal/Desktop/Melodify/public/library.html")
+}
+module.exports = {signup,login,home,profile,searchOnYoutube,updateProfile,searchSpotifySongs,library};
 
