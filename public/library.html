@@ -194,12 +194,12 @@
                 </div>
 
                 <!-- ❤️ New Liked Songs Section (Initially Hidden) -->
-                <div id="likedSongsSection" style="display: none;" onclick="loadOut()">
-                    <button id="backToPlaylists">← Back</button>
-                    <h2>Liked Songs</h2>
-                    <div id="likedSongsContainer">
-                        <!-- Songs will be inserted here dynamically -->
-                    </div>
+                <div id="likedSongsSection" style="display: none;">
+                    <button id="backToPlaylists"  onclick="loadOut()">← Back</button>
+                        <div class="song-grid" id="likedSongsContainer" >
+
+                        </div>
+                    
                 </div>
 
             </div>
@@ -353,15 +353,42 @@
                 }
             }
         });
-        function fetchLikedSongs() {
+        async function fetchLikedSongs() {
+                let isLiked = false;
                 // Replace this with your API fetch logic
-                document.getElementById("likedSongsContainer").innerHTML = `
-        <div class="song-card">
-            <img src="song-thumbnail.jpg" alt="Song">
-            <h3>Song Title</h3>
-            <p>Artist Name</p>
-        </div>
-    `;
+                const likedSongsResponse = await fetch('/getLikedSongs');
+                const likedSongs = await likedSongsResponse.json();
+                document.getElementById("likedSongsContainer").innerHTML ="";
+                likedSongs.forEach((song) => {
+                     document.getElementById("likedSongsContainer").innerHTML += `
+       <div class="song-card">
+                <div class="artwork-container">
+                    <img class="artwork" src="${song.song_thumbnail}" alt="${song.song_name}">
+                    <div class="button-container">
+                        <button class="song-play-button">
+                            <svg role="img" height="20" width="20" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M7.05 3.606l13.49 7.788a.7.7 0 010 1.212L7.05 20.394A.7.7 0 016 19.788V4.212a.7.7 0 011.05-.606z"></path>
+                            </svg>
+                        </button>
+                        <button class="download-button" data-trackId="${song.song_id}" data-trackArtist="${song.song_artist}" data-trackName="${song.song_name}" onclick="downloadSpotifySong(this)">
+                            <i class="fa-solid fa-download"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="song-info">
+                    <h3 class="song-title">${song.song_name}</h3>
+                    <p class="song-artist">${song.song_artist}</p>
+                    <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart"  
+                       data-trackId="${song.song_id}" 
+                       onclick="addLikeToThisSong(this)" 
+                       style="cursor: pointer; z-index:6;">
+                    </i>
+                </div>
+            </div>
+                    `;
+                });
+
+               
             }
         function loadOut(){
             document.getElementById('likedSongsSection').style.display = 'none';

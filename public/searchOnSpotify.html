@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Melodify-spotify</title>
+    <title>Melodify-spotify</title>
     <link rel="icon" type="image/png" href="photos/spotify png.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/9699ff2ebc.js" crossorigin="anonymous"></script>
@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <div class="music-player-page" >
+    <div class="music-player-page">
         <div class="standalone-player">
             <div class="album-display">
                 <div class="album-art">
@@ -115,7 +115,7 @@
             <div class="col-md-3 col-lg-2 sidebar">
                 <div class="d-flex flex-column p-3">
                     <img src="photos/melodify__2_-removebg-preview.png" height="80px" style="margin-left: 5px;" alt="">
-                    
+
                     <ul class="nav nav-pills flex-column mb-auto">
                         <li class="nav-item">
                             <a href="/" class="nav-link">
@@ -171,11 +171,11 @@
 
                     <div id="searchResults" class="mb-4 d-none">
                         <h3 class="text-white mb-3">Search Results</h3>
-                        
-                            <!-- Results will be populated here -->
-                             <div class="song-grid" id="resultsContainer" >
 
-                             </div>
+                        <!-- Results will be populated here -->
+                        <div class="song-grid" id="resultsContainer">
+
+                        </div>
                     </div>
 
                     <div id="browseAll">
@@ -218,7 +218,7 @@
         </div>
 
         <!-- Player (same as index.html) -->
-        <div class="player fixed-bottom" id="footer" >
+        <div class="player fixed-bottom" id="footer">
             <div class="container-fluid">
                 <div class="row align-items-center">
                     <div class="col-md-3" style="cursor: pointer;" id="playlistToggle">
@@ -275,7 +275,7 @@
             fixedBottom.style.opacity = 1;
             miniplayer.classList.remove('active');
             overlay.classList.remove('active');
-            miniplayer.style.display ='none';
+            miniplayer.style.display = 'none';
 
         });
         const searchInput = document.querySelector('.search-input');
@@ -326,31 +326,31 @@
             const name = button.dataset.trackname;
             const artist = button.dataset.trackartist;
 
-          const downloadRes = await fetch('/downloadSpotifyTrack', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: name, artist: artist }),
-          });
+            const downloadRes = await fetch('/downloadSpotifyTrack', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: name, artist: artist }),
+            });
 
-          const downloadData = await downloadRes.json();
-          console.log(downloadData.message);
-    
-    }
+            const downloadData = await downloadRes.json();
+            console.log(downloadData.message);
+
+        }
 
         async function displaySongs(songs) {
-    const songContainer = document.querySelector('#resultsContainer');
-    songContainer.innerHTML = ''; // Clear previous results
+            const songContainer = document.querySelector('#resultsContainer');
+            songContainer.innerHTML = ''; // Clear previous results
 
-    // Fetch liked songs
-    const likedSongsResponse = await fetch('/getLikedSongs');
-    const likedSongs = await likedSongsResponse.json();
-    const likedSongIds = new Set(likedSongs.map(song => song.song_id)); // Convert to Set for quick lookup
+            // Fetch liked songs
+            const likedSongsResponse = await fetch('/getLikedSongs');
+            const likedSongs = await likedSongsResponse.json();
+            const likedSongIds = new Set(likedSongs.map(song => song.song_id)); // Convert to Set for quick lookup
 
-    songs.forEach((song) => {
-        // Check if song is already liked
-        const isLiked = likedSongIds.has(song.id);
+            songs.forEach((song) => {
+                // Check if song is already liked
+                const isLiked = likedSongIds.has(song.id);
 
-        const songCard = `
+                const songCard = `
             <div class="song-card">
                 <div class="artwork-container">
                     <img class="artwork" src="${song.thumbnail}" alt="${song.name}">
@@ -370,6 +370,9 @@
                     <p class="song-artist">${song.artist}</p>
                     <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart"  
                        data-trackId="${song.id}" 
+                       data-trackArtist="${song.artist}" 
+                        data-trackName="${song.name}" 
+                        data-trackThumbnail="${song.thumbnail}" 
                        onclick="addLikeToThisSong(this)" 
                        style="cursor: pointer; z-index:6;">
                     </i>
@@ -377,9 +380,9 @@
             </div>
         `;
 
-        songContainer.innerHTML += songCard;
-    });
-}
+                songContainer.innerHTML += songCard;
+            });
+        }
 
         let footer = document.getElementById('footer');
         let timeout;
@@ -387,7 +390,7 @@
         function hideFooter() {
             footer.classList.add('hidden');
         }
-        
+
 
         function showFooter() {
             footer.classList.remove('hidden');
@@ -398,44 +401,56 @@
             clearTimeout(timeout);
             timeout = setTimeout(hideFooter, 3000); // Hide after 3 seconds of inactivity
         }
-       async function addLikeToThisSong(button) {
+        async function addLikeToThisSong(button) {
 
             if (button.classList.contains('fa-solid')) {
                 // Remove like
+                console.log('into remove')
                 button.classList.remove('fa-solid');
                 button.classList.add('fa-regular');
-                const removeLike = await fetch('/addLikeToSong',{
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ trackId: button.dataset.trackid }),
-                        
-                    })
-                    if(removeLike.ok){
+                const removeLike = await fetch('/addLikeToSong', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        trackId: button.dataset.trackid,
+                        trackName: button.dataset.trackname,
+                        trackArtist: button.dataset.trackartist,
+                        trackThumbnail: button.dataset.trackthumbnail
+                    }),
+
+                })
+                if (removeLike.ok) {
                     console.log('Like removed successfully');
-                } else{
+                } else {
                     console.error('Error removing like');
                 }
-            }else{
+            } else {
                 // Add like
                 button.classList.remove('fa-regular');
                 button.classList.add('fa-solid');
-                    const likeAdded = await fetch('/addLikeToSong',{
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ trackId: button.dataset.trackid }),
-                        
-                    })
-                       if(likeAdded.ok){
+                const likeAdded = await fetch('/addLikeToSong', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        trackId: button.dataset.trackid,
+                        trackName: button.dataset.trackname,
+                        trackArtist: button.dataset.trackartist,
+                        trackThumbnail: button.dataset.trackthumbnail
+                    }),
+
+
+                })
+                if (likeAdded.ok) {
                     console.log('Like added successfully');
-                }else{
+                } else {
                     console.error('Error adding like');
                 }
 
-           
 
-             
+
+
             }
-          
+
         }
         // Show footer when mouse is over the window or any interaction occurs
         window.addEventListener('mousemove', showFooter);

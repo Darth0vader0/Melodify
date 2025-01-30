@@ -590,7 +590,7 @@
 
         /* playlist-open styles */
         
-        .song-card {
+       .song-card {
             width: 180px;
             background: #181818;
             border-radius: 6px;
@@ -635,7 +635,7 @@
             transform: translateY(0);
         }
 
-        .play-button, .download-button {
+        .song-play-button, .download-button {
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -649,7 +649,7 @@
             transition: all 0.3s ease;
         }
 
-        .play-button {
+        .song-play-button {
             background: #1db954;
         }
 
@@ -657,16 +657,16 @@
             background: #ef690f;
         }
 
-        .play-button:hover, .download-button:hover {
+        .song-play-button:hover, .download-button:hover {
             transform: scale(1.06);
         }
 
-        .play-button:hover {
+        .song-play-button:hover {
             background: #1ed760;
         }
 
         .download-button:hover {
-            background: #cda71d;
+            background: #deb520;
         }
 
         .song-info {
@@ -700,7 +700,6 @@
             font-size: 14px;
             line-height: 20px;
         }
-
         /* Optional: Grid layout for multiple cards */
         .song-grid {
             display: grid;

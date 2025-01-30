@@ -8,6 +8,7 @@ const dotEnv = require('dotenv');
 dotEnv.config();
 const db = require('../lib/db');
 const SpotifyWebApi = require('spotify-web-api-node');
+const { log } = require('console');
 // Spotify API setup
 
 const downloadSpotifyTrack = (req, res) => {
@@ -69,28 +70,40 @@ const addLikeToSong = async (req, res) => {
 
       const user_id = result[0].user_id;
       const song_id = req.body.trackId;
+      const thumbnail= req.body.trackThumbnail;
+      const song_name = req.body.trackName;
+      const artist_name = req.body.trackArtist;
 
       // Check if the song is already liked
       const query = "SELECT * FROM likes WHERE user_id = ? AND song_id = ?";
       db.query(query, [user_id, song_id], (err, results) => {
+        
         if (err) return res.status(500).json({ error: "Database error" });
         if (results.length > 0) {
           // Unlike the song
+          
           db.query("DELETE FROM likes WHERE user_id = ? AND song_id = ?", [user_id, song_id], (err, result) => {
+
             if (err) return res.status(500).json({ error: "Database error" });
             return res.json({ message: "Song unliked successfully" }); // 🔹 RETURN to prevent further execution
           });
         } else {
+          
           // Like the song
           const like_id = uuidv4();
-          db.query("INSERT INTO likes (user_id, song_id, like_id) VALUES (?, ?, ?)", [user_id, song_id, like_id], (err, result) => {
-            if (err) return res.status(500).json({ error: "Database error" });
+          db.query("INSERT INTO likes (user_id, song_id, like_id ,song_name ,song_thumbnail,song_artist) VALUES (?, ?, ?,?,?,?)", [user_id, song_id, like_id,song_name,thumbnail,artist_name], (err, result) => {
+            
+            if (err) {
+              console.error('Error inserting like:', err.message);
+              return res.status(500).json({ error: 'Internal server error' });
+            }
             return res.json({ message: "Song liked successfully" }); // 🔹 RETURN to prevent further execution
           });
         }
       });
     });
   } catch (error) {
+    log('Error creating playlist:', error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -106,7 +119,7 @@ const getLikedSongs = async (req, res) => {
       return res.status(500).json({ error: 'Internal server error' });
     }
     const user_id = result[0].user_id;
-    const query = `SELECT song_id FROM likes WHERE user_id =?`;
+    const query = `SELECT * FROM likes WHERE user_id =?`;
     db.query(query, [user_id], async (err, likedSongs) => {
       if (err) {
         console.error('Error fetching liked songs:', err.message);
