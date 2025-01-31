@@ -2,6 +2,20 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "java",
+            "name": "MonolithicCipher",
+            "request": "launch",
+            "mainClass": "MonolithicCipher",
+            "projectName": "Melodify_26d91172"
+        },
+        {
+            "type": "java",
+            "name": "monolithil",
+            "request": "launch",
+            "mainClass": "monolithil",
+            "projectName": "Melodify_26d91172"
+        },
+        {
             "name": "C++ Launch",
             "type": "cppdbg",
             "request": "launch",

@@ -14,7 +14,7 @@ const { log } = require('console');
 const downloadSpotifyTrack = (req, res) => {
   const { name, artist } = req.body;
   const query = `${name} ${artist}`;
-  const outputDir = path.resolve(__dirname, 'downloadsForSpotify');
+  const outputDir = path.resolve("C:/Users/kamal/Desktop/downloads");
   const outputPath = path.join(outputDir, `${name}.mp3`);
 
   // yt-dlp command
@@ -56,7 +56,16 @@ const createSpotifyPlaylist = async (req, res) => {
 
 }
 
+const addToPlaylist=async (req,res)=>{
+    const token = req.cookies.jwt;
+    const email = jwt.decode(token, process.env.JWT_SECRET).userName;
+    // Get user_id from email
+    const q = "SELECT user_id FROM users WHERE email = ?";
+    db.query(q, [email], async (err, result) => {
+      
+    });
 
+}
 const addLikeToSong = async (req, res) => {
   try {
     const token = req.cookies.jwt;

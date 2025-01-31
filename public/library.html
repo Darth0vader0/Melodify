@@ -168,8 +168,8 @@
                 <!-- 🎵 Existing Playlist Section -->
                 <div id="playlistSection">
                     <div class="filters">
-                        <button class="filter-btn active">Playlists</button>
-                        <button class="filter-btn" id="createPlaylistBtn">Create</button>
+                        
+                        <button class="filter-btn active" id="createPlaylistBtn">Create</button>
                     </div>
                     <div class="library-grid" id="library-item-result">
                         <div class="library-item liked-songs" id="likedSongsBtn" onclick="loadSongs()">
@@ -195,7 +195,14 @@
 
                 <!-- ❤️ New Liked Songs Section (Initially Hidden) -->
                 <div id="likedSongsSection" style="display: none;">
-                    <button id="backToPlaylists"  onclick="loadOut()">← Back</button>
+                    <button id="backToPlaylists" class="filter-btn active" onclick="loadOut()">← Back</button>
+                        <div class="song-grid" id="likedSongsContainer" >
+
+                        </div>
+                    
+                </div>
+                <div id="playlistSongSection" style="display: none;">
+                    <button id="backToPlaylists" class="filter-btn"  onclick="loadOut()">← Back</button>
                         <div class="song-grid" id="likedSongsContainer" >
 
                         </div>
@@ -262,7 +269,8 @@
         const input = document.getElementById('playlist-name');
         const errorMessage = document.getElementById('error-message');
         const slidingDiv = document.getElementById('sliding-div');
-  
+        const  playlistItems=  document.getElementById('library-item-result');
+
         document.addEventListener('DOMContentLoaded', async () => {
             try {
                 const response = await fetch('/getSpotifyPlaylists');
@@ -392,11 +400,17 @@
             }
         function loadOut(){
             document.getElementById('likedSongsSection').style.display = 'none';
-             document.getElementById('likedSongsBtn').style.display = 'block';
+             document.getElementById('playlistSection').style.display = 'block';
         }
         // Add event listener to playlist items
        function loadSongs(){
-        document.getElementById('likedSongsBtn').style.display = 'none';
+        document.getElementById('playlistSection').style.display = 'none';
+        document.getElementById('likedSongsSection').style.display = 'block';
+        fetchLikedSongs();
+       }
+
+       function loadPlaylistSongs(element) {
+        document.getElementById('playlistSection').style.display = 'none';
         document.getElementById('likedSongsSection').style.display = 'block';
         fetchLikedSongs();
        }

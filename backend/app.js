@@ -16,6 +16,7 @@ const {signUp,logIn,checkLogins,logout} = require('./src/controllers/auth.contro
 const {fetchUserData} = require('./src/controllers/user.controller');   
 const {uploadPhoto,updatePassword} = require('./src/controllers/profile.controller');
 const {downloadSpotifyTrack,createSpotifyPlaylist,getSpotifyPlaylists,getPlaylistSongs,addLikeToSong,getLikedSongs} = require('./src/controllers/spotifySong.controller');
+const {setDownloadPath} = require('./src/lib/download.lib')
 // Middleware
 
 app.use(cors());
@@ -56,6 +57,7 @@ app.get("/getSpotifyPlaylists",getSpotifyPlaylists)
 app.get('/getPlaylistSongs', getPlaylistSongs)
 app.post('/addLikeToSong',addLikeToSong)
 app.get('/getLikedSongs',getLikedSongs)
+app.post('/setDownloadPath', setDownloadPath);
 // Serve downloaded files
 app.use('/downloads', express.static('downloads'));
 
